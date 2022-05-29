@@ -45,17 +45,19 @@ def next_state(state, neighbourhood):
 
 
 def next_generation(map):
-    next_gen = map.copy()
+    next_gen = []
     for line in range(len(map)):
+        new_line = []
         for col in range(len(map[line])):
             neighbourhood = neighbours(line, col)
             state = map[line][col]
-            next_gen[line][col] = next_state(state, neighbourhood)
+            new_line.append(next_state(state, neighbourhood))
 
             print(f'\
-({line}.{col}):{state}::{next_gen[line][col]}:\
+({line}.{col}):{state}::{new_line[col]}:\
 ({neighbourhood.count(live)},{neighbourhood})'
                   )
+        next_gen.append(new_line)
 
     return next_gen
 
