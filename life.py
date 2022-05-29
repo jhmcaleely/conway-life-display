@@ -13,23 +13,18 @@ dead = '-'
 import random
 
 def random_state():
-    state = random.randrange(2)
-    if state == 0:
+    if random.randrange(2) == 0:
         return dead
     else:
         return live
 
-def make_row(cols):
-    row = []
-    for node in range(cols):
-        row.append(random_state())
-    return row
+
+def make_row(cols=col_d):
+    return [random_state() for _ in range(cols)]
+
 
 def make_map(lines=line_d, cols=col_d):
-    fresh_map = []
-    for line in range(lines):
-        fresh_map.append(make_row(cols))
-    return fresh_map
+    return [make_row(cols) for _ in range(lines)]
 
 
 def next_state(state, neighbourhood):
@@ -49,7 +44,7 @@ def next_generation(map):
     for line in range(len(map)):
         new_line = []
         for col in range(len(map[line])):
-            neighbourhood = neighbours(line, col)
+            neighbourhood = neighbours(map, line, col)
             state = map[line][col]
             new_line.append(next_state(state, neighbourhood))
 
@@ -62,20 +57,18 @@ def next_generation(map):
     return next_gen
 
 
-def n_line(line, col):
-    n = []
-    n.append(map[line][(col-1) % col_d])
-    n.append(map[line][col])
-    n.append(map[line][(col+1) % col_d])
-    return n
+def adjacent_line(line, col):
+    return [line[(col + x) % col_d] for x in range(-1, 2)]
 
 
-def neighbours(line, col):
+def neighbours(map, line, col):
     n = []
-    n.extend(n_line((line - 1) % line_d, col))
+    n.extend(adjacent_line(map[(line - 1) % line_d], col))
+
     n.append(map[line][(col-1) % col_d])
     n.append(map[line][(col+1) % col_d])
-    n.extend(n_line((line + 1) % line_d, col))
+
+    n.extend(adjacent_line(map[(line + 1) % line_d], col))
     return n
 
 
