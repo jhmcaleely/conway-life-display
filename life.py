@@ -5,7 +5,7 @@
 map = []
 
 col_d = 4
-line_d = 8
+line_d = 16
 
 live = '*'
 dead = '-'
@@ -19,39 +19,45 @@ def make_node():
     else:
         return live
 
-def make_row():
+def make_row(cols):
     row = []
-    for node in range(col_d):
+    for node in range(cols):
         row.append(make_node())
     return row
 
-def make_map():
+def make_map(lines, cols):
     fresh_map = []
-    for line in range(line_d):
-        fresh_map.append(make_row())
+    for line in range(lines):
+        fresh_map.append(make_row(cols))
     return fresh_map
 
 
-def next_state(line, col):
-    neighbourhood = neighbours(line, col)
-    state = map[line][col]
-
+def next_state(state, neighbourhood):
     new_state = dead
     alive_neighbours = neighbourhood.count(live)
+    
     if state == live and (alive_neighbours == 2 or alive_neighbours == 3):
         new_state = live
     elif state == dead and alive_neighbours == 3:
         new_state = live
+
     return new_state
 
 
-def next_generation():
+def next_generation(map):
     next_gen = map.copy()
     for line in range(len(map)):
         for col in range(len(map[line])):
-            next_gen[line][col] = next_state(line, col)
-    return next_gen
+            neighbourhood = neighbours(line, col)
+            state = map[line][col]
+            next_gen[line][col] = next_state(state, neighbourhood)
 
+            print(f'\
+({line}.{col}):{state}::{next_gen[line][col]}:\
+({neighbourhood.count(live)},{neighbourhood})'
+                  )
+
+    return next_gen
 
 
 def n_line(line, col):
@@ -70,6 +76,15 @@ def neighbours(line, col):
     n.extend(n_line((line + 1) % line_d, col))
     return n
 
+
+def neighbourhood(line, col):
+    n = []
+    n.extend(n_line((line - 1) % line_d, col))
+    n.extend(n_line((line    ) % line_d, col))
+    n.extend(n_line((line + 1) % line_d, col))
+    return n
+
+
 def print_neighbours(n):
     print(f'{n[:3]}')
     print(f'{n[3:4]} x {n[4:5]}')
@@ -81,7 +96,13 @@ def print_map(map):
         print(f'{line}: {map[line]}')
 
 
-map = make_map()
+def tick():
+    global map
+    map = next_generation(map)
+    print_map(map)
+
+
+map = make_map(line_d, col_d)
 print_map(map)
-map = next_generation()
-print_map(map)
+tick()
+tick()
