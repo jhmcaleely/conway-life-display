@@ -12,7 +12,7 @@ dead = '-'
 
 import random
 
-def make_node():
+def random_state():
     state = random.randrange(2)
     if state == 0:
         return dead
@@ -22,10 +22,10 @@ def make_node():
 def make_row(cols):
     row = []
     for node in range(cols):
-        row.append(make_node())
+        row.append(random_state())
     return row
 
-def make_map(lines, cols):
+def make_map(lines=line_d, cols=col_d):
     fresh_map = []
     for line in range(lines):
         fresh_map.append(make_row(cols))
@@ -96,7 +96,12 @@ def tick():
     print_map(map)
 
 
-map = make_map(line_d, col_d)
-print_map(map)
+def start():
+    global map
+    map = make_map()
+    print_map(map)
+
+
+start()
 tick()
 tick()
