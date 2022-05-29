@@ -24,8 +24,18 @@ def n_line(line, col):
 
 def neighbours(line, col):
     n = []
-    n.append(n_line((line - 1) % line_d, col))
+    n.extend(n_line((line - 1) % line_d, col))
     n.append(map[line][(col-1) % col_d])
     n.append(map[line][(col+1) % col_d])
-    n.append(n_line((line + 1) % line_d, col))
+    n.extend(n_line((line + 1) % line_d, col))
     return n
+
+def print_neighbours(n):
+    print(f'{n[:3]}')
+    print(f'{n[3:4]} x {n[4:5]}')
+    print(f'{n[5:]}')
+
+
+def print_map(map):
+    for line in range(len(map)):
+        print(f'{line}: {map[line]}')
