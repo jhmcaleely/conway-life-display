@@ -1,18 +1,58 @@
 # Python implementation of Conway's Life
 # https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
 
-print('hello world')
 
-map = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+map = []
 
-new_map = map.copy()
+col_d = 4
+line_d = 8
 
-for line in range(len(map)):
-    for col in range(len(map[line])):
-        new_map[line][col] = (line, col)
+live = '*'
+dead = '-'
 
-col_d = len(map[0])
-line_d = len(map)
+import random
+
+def make_node():
+    state = random.randrange(2)
+    if state == 0:
+        return dead
+    else:
+        return live
+
+def make_row():
+    row = []
+    for node in range(col_d):
+        row.append(make_node())
+    return row
+
+def make_map():
+    fresh_map = []
+    for line in range(line_d):
+        fresh_map.append(make_row())
+    return fresh_map
+
+
+def next_state(line, col):
+    neighbourhood = neighbours(line, col)
+    state = map[line][col]
+
+    new_state = dead
+    alive_neighbours = neighbourhood.count(live)
+    if state == live and (alive_neighbours == 2 or alive_neighbours == 3):
+        new_state = live
+    elif state == dead and alive_neighbours == 3:
+        new_state = live
+    return new_state
+
+
+def next_generation():
+    next_gen = map.copy()
+    for line in range(len(map)):
+        for col in range(len(map[line])):
+            next_gen[line][col] = next_state(line, col)
+    return next_gen
+
+
 
 def n_line(line, col):
     n = []
@@ -39,3 +79,9 @@ def print_neighbours(n):
 def print_map(map):
     for line in range(len(map)):
         print(f'{line}: {map[line]}')
+
+
+map = make_map()
+print_map(map)
+map = next_generation()
+print_map(map)
