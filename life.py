@@ -79,14 +79,6 @@ def neighbours(line, col):
     return n
 
 
-def neighbourhood(line, col):
-    n = []
-    n.extend(n_line((line - 1) % line_d, col))
-    n.extend(n_line((line    ) % line_d, col))
-    n.extend(n_line((line + 1) % line_d, col))
-    return n
-
-
 def print_neighbours(n):
     print(f'{n[:3]}')
     print(f'{n[3:4]} x {n[4:5]}')
