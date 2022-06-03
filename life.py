@@ -93,8 +93,3 @@ def start():
     global world
     world = make_world()
     print_world(world)
-
-
-start()
-tick()
-tick()
