@@ -5,8 +5,24 @@ import random
 import neopixel
 import board
 
-live = 20
-dead = 0
+plane_live = 20
+plane_dead = 0
+plane_x = 17
+plane_y = 7
+
+plane_world = life.make_world(plane_x, plane_y)
+
+def display_plane(world):
+    for i in range(life.col_count(world)):
+        for j in range(life.row_count(world)):
+            pixel_colour = plane_dead
+            if world[j][i] == life.live:
+                pixel_colour = plane_live
+            display.pixel(i, j, pixel_colour)
+            
+cube_side = 4
+
+cube_world = life.make_world(cube_side, cube_side**2)
 
 pixels = neopixel.NeoPixel(board.P0, 64, brightness=0.1, auto_write=False, pixel_order = neopixel.GRB)
 pixels.fill((0,0,0))
@@ -23,32 +39,39 @@ def cube_pixel(x, y, z, colour):
     global cube_index, pixels
     pixels[cube_index[z*16+y*4+x]] = colour
 
-for k in range(4):
-    for j in range(4):
-        for i in range(4):
-            cube_pixel(i,j,k,(0,255,0))
-            pixels.show()
-            time.sleep(0.1)
-    
+cube_live = (128,128,0)
+cube_dead = (0,0,64)
 
-world = life.make_world(7, 17)
-#life.print_world(world)
+def display_cube(world):
+    for z in range(cube_side):
+        for j in range(cube_side):
+            for i in range(cube_side):
+                pixel_colour = cube_dead
+                if world[j+z*cube_side][i] == life.live:
+                    pixel_colour = cube_live
+                cube_pixel(i,j,z, pixel_colour)
+    pixels.show()
 
-def display_world(world):
-    for i in range(17):
-        for j in range(7):
-            pixel_colour = dead
-            if world[j][i] == life.live:
-                pixel_colour = live
-            display.pixel(i, j, pixel_colour)
 
 while True:
-    display_world(world)
-    world = life.next_generation(world)
+    display_plane(plane_world)
+    display_cube(cube_world)
+    plane_world = life.next_generation(plane_world)
+    cube_world = life.next_generation(cube_world)
+    
     if button_a.is_pressed():
-        world = life.make_world(7, 17)
+        plane_world = life.make_world(plane_x, plane_y)
+        cube_world = life.make_world(cube_side, cube_side**2)
+        
     if button_b.is_pressed():
-        i = random.randrange(7)
-        j = random.randrange(17)
-        world[i][j] = life.live
+        i = random.randrange(plane_x)
+        j = random.randrange(plane_y)
+        plane_world[j][i] = life.live
+        
+        i = random.randrange(cube_side)
+        j = random.randrange(cube_side)
+        k = random.randrange(cube_side)
+        cube_world[j+k*cube_side][i] = life.live
+
     time.sleep(0.2)
+    

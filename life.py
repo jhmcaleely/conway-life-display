@@ -18,7 +18,7 @@ def random_state():
 def make_row(cols):
     return [random_state() for _ in range(cols)]
 
-def make_world(lines, cols):
+def make_world(cols, lines):
     return [make_row(cols) for _ in range(lines)]
 
 def row_count(world):
