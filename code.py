@@ -1,14 +1,14 @@
-from picoed import *
+import picoed
 import life
 import time
 import random
 import neopixel
 import board
 
-plane_live = 20
-plane_dead = 0
-plane_x = 17
-plane_y = 7
+plane_live = 50
+plane_dead = 1
+plane_x = picoed.Display.width
+plane_y = picoed.Display.height
 
 plane_world = life.make_world(plane_x, plane_y)
 
@@ -18,15 +18,16 @@ def display_plane(world):
             pixel_colour = plane_dead
             if world[j][i] == life.live:
                 pixel_colour = plane_live
-            display.pixel(i, j, pixel_colour)
+            picoed.display.pixel(i, j, pixel_colour)
             
 cube_side = 4
 
-cube_world = life.make_world(cube_side, cube_side**2)
+def make_cube_world(side):
+    return life.make_world(cube_side, cube_side**2)
 
-pixels = neopixel.NeoPixel(board.P0, 64, brightness=0.1, auto_write=False, pixel_order = neopixel.GRB)
-pixels.fill((0,0,0))
-pixels.show()
+cube_world = make_cube_world(cube_side)
+
+pixels = neopixel.NeoPixel(board.P0, cube_side**3, brightness=0.1, auto_write=False, pixel_order = neopixel.GRB)
 
 # the LEDs are arranged serially, snaking around the cube.
 cube_index = [ 0, 1, 2, 3, 7, 6, 5, 4, 8, 9,10,11,15,14,13,12,
@@ -36,20 +37,23 @@ cube_index = [ 0, 1, 2, 3, 7, 6, 5, 4, 8, 9,10,11,15,14,13,12,
               ]
 
 def cube_pixel(x, y, z, colour):
-    global cube_index, pixels
+    global pixels
     pixels[cube_index[z*16+y*4+x]] = colour
 
-cube_live = (128,128,0)
-cube_dead = (0,0,64)
+def get_world_cube_pixel(world, x, y, z):
+    return world[y+z*cube_side][x]
+
+cube_live = (128,0,0)
+cube_dead = (16,0,0)
 
 def display_cube(world):
-    for z in range(cube_side):
+    for k in range(cube_side):
         for j in range(cube_side):
             for i in range(cube_side):
                 pixel_colour = cube_dead
-                if world[j+z*cube_side][i] == life.live:
+                if get_world_cube_pixel(world, i, j, k) == life.live:
                     pixel_colour = cube_live
-                cube_pixel(i,j,z, pixel_colour)
+                cube_pixel(i,j,k, pixel_colour)
     pixels.show()
 
 
@@ -59,11 +63,11 @@ while True:
     plane_world = life.next_generation(plane_world)
     cube_world = life.next_generation(cube_world)
     
-    if button_a.is_pressed():
+    if picoed.button_a.is_pressed():
         plane_world = life.make_world(plane_x, plane_y)
         cube_world = life.make_world(cube_side, cube_side**2)
         
-    if button_b.is_pressed():
+    if picoed.button_b.is_pressed():
         i = random.randrange(plane_x)
         j = random.randrange(plane_y)
         plane_world[j][i] = life.live
