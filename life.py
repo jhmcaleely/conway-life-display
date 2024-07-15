@@ -1,13 +1,11 @@
 # Python implementation of Conway's Life
 # https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
 
+import random
 
-world = []
 
 live = '*'
 dead = '-'
-
-import random
 
 def random_state():
     if random.randrange(2) == 0:
@@ -76,24 +74,6 @@ def neighbours(world, line, col):
     return n
 
 
-def print_neighbours(n):
-    print(f'{n[:3]}')
-    print(f'{n[3:4]} x {n[4:5]}')
-    print(f'{n[5:]}')
-
-
 def print_world(world):
     for line in range(len(world)):
         print(f'{line}: {world[line]}')
-
-
-def tick():
-    global world
-    world = next_generation(world)
-    print_world(world)
-
-
-def start():
-    global world
-    world = make_world()
-    print_world(world)
