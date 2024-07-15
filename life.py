@@ -4,9 +4,6 @@
 
 world = []
 
-col_d = 4
-line_d = 16
-
 live = '*'
 dead = '-'
 
@@ -18,13 +15,17 @@ def random_state():
     else:
         return live
 
-
-def make_row(cols=col_d):
+def make_row(cols):
     return [random_state() for _ in range(cols)]
 
-
-def make_world(lines=line_d, cols=col_d):
+def make_world(lines, cols):
     return [make_row(cols) for _ in range(lines)]
+
+def row_count(world):
+    return len(world)
+
+def col_count(world):
+    return len(world[0])
 
 
 def next_state(state, neighbourhood):
@@ -41,34 +42,37 @@ def next_state(state, neighbourhood):
 
 def next_generation(world):
     next_gen = []
-    for line in range(len(world)):
+    for line in range(row_count(world)):
         new_line = []
-        for col in range(len(world[line])):
+        for col in range(col_count(world)):
             neighbourhood = neighbours(world, line, col)
             state = world[line][col]
             new_line.append(next_state(state, neighbourhood))
 
-            print(f'\
-({line}.{col}):{state}::{new_line[col]}:\
-({neighbourhood.count(live)},{neighbourhood})'
-                  )
+#            print(f'\
+#({line}.{col}):{state}::{new_line[col]}:\
+#({neighbourhood.count(live)},{neighbourhood})'
+#                  )
         next_gen.append(new_line)
 
     return next_gen
 
 
-def adjacent_line(line, col):
-    return [line[(col + x) % col_d] for x in range(-1, 2)]
+def adjacent_line(world, line, col):
+    return [line[(col + x) % col_count(world)] for x in range(-1, 2)]
 
 
 def neighbours(world, line, col):
     n = []
-    n.extend(adjacent_line(world[(line - 1) % line_d], col))
+    col_c = col_count(world)
+    row_c = row_count(world)
+    
+    n.extend(adjacent_line(world, world[(line - 1) % row_c], col))
 
-    n.append(world[line][(col-1) % col_d])
-    n.append(world[line][(col+1) % col_d])
+    n.append(world[line][(col-1) % col_c])
+    n.append(world[line][(col+1) % col_c])
 
-    n.extend(adjacent_line(world[(line + 1) % line_d], col))
+    n.extend(adjacent_line(world, world[(line + 1) % row_c], col))
     return n
 
 
