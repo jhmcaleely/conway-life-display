@@ -1,9 +1,19 @@
 # Python implementation of Conway's Life
 # https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
 
+# A 2D matrix of cells, which contain a running instance
+# of Conway's Life.
+#
+# The neighbourhood (n) around a cell (c) is consulted to
+# see if the cell should maintain or change state
+#
+#  nnn
+#  ncn
+#  nnn
+
 import random
 
-
+# characters handing for ascii state reports
 live = '*'
 dead = '-'
 
@@ -25,6 +35,12 @@ def row_count(world):
 def col_count(world):
     return len(world[0])
 
+def get_cell(world, x, y):
+    return world[y][x]
+
+def set_cell(world, x, y, state):
+    world[y][x] = state
+
 
 def next_state(state, neighbourhood):
     new_state = dead
@@ -44,7 +60,7 @@ def next_generation(world):
         new_line = []
         for col in range(col_count(world)):
             neighbourhood = neighbours(world, line, col)
-            state = world[line][col]
+            state = get_cell(world, col, line)
             new_line.append(next_state(state, neighbourhood))
 
 #            print(f'\
@@ -67,8 +83,8 @@ def neighbours(world, line, col):
     
     n.extend(adjacent_line(world, world[(line - 1) % row_c], col))
 
-    n.append(world[line][(col-1) % col_c])
-    n.append(world[line][(col+1) % col_c])
+    n.append(get_cell(world, (col-1) % col_c, line))
+    n.append(get_cell(world, (col+1) % col_c, line))
 
     n.extend(adjacent_line(world, world[(line + 1) % row_c], col))
     return n
