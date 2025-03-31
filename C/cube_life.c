@@ -1,29 +1,55 @@
+/*
+ * Conway's Life on the 4Tronix Cube:BIT, C/Pico edition.
+ */
 #include <stdlib.h>
+#include <stdint.h>
 
 #include "pico/stdlib.h"
 #include "ws2812.pio.h"
 
-
-#define NUM_PIXELS 64
-// limit brightness so that 2.5A USB power supply is sufficient.
-#define PIXEL_MAX 128
-
 // Match the GPIO from Raspberry Pi 40-Pin on 4Tronix Cube:BIT (GPIO18)
 #define WS2812_GPIO 18
 
-static inline void put_pixel(PIO pio, uint sm, uint32_t pixel_grb) {
+// 4x4 LED cube
+#define NUM_PIXELS 64
 
-    pio_sm_put_blocking(pio, sm, pixel_grb << 8u);
+// limit brightness so that 2.5A USB power supply is sufficient.
+#define PIXEL_MAX (UINT8_MAX / 2)
+
+static uint8_t clamp_brightness(uint8_t raw) {
+    if (PIXEL_MAX < UINT8_MAX) {
+        uint8_t divider = UINT8_MAX / PIXEL_MAX;
+        return raw / divider;
+    } else {
+        return raw;
+    }
 }
 
-static inline uint32_t urgb_u32(uint8_t r, uint8_t g, uint8_t b) {
-    return
-            ((uint32_t) (r) << 8) |
-            ((uint32_t) (g) << 16) |
-            (uint32_t) (b);
-}
+struct pixel {
+    uint8_t r;
+    uint8_t g;
+    uint8_t b;
+};
 
-uint32_t pixels[NUM_PIXELS];
+struct pixel pixels[NUM_PIXELS];
+
+static void write_pixels(PIO pio, uint sm, struct pixel* pixels) {
+    for (int i = 0; i < NUM_PIXELS; i++) {
+
+        struct pixel p;
+        p.r = clamp_brightness(pixels[i].r);
+        p.g = clamp_brightness(pixels[i].g);
+        p.b = clamp_brightness(pixels[i].b);
+        
+        // pack the pixel into the top 24 bits of a 32bit word for transport to the pio state machine.
+        uint32_t pixel = ((uint32_t) p.r) << 16 | 
+                         ((uint32_t) p.g) << 24 | 
+                         ((uint32_t) p.b) << 8;
+
+        pio_sm_put_blocking(pio, sm, pixel);
+
+    }
+}
 
 
 int main() {
@@ -43,17 +69,14 @@ int main() {
 
     int i = 0;
     while (true) {
-        pixels[i] = urgb_u32(64, 64, 64);
+        pixels[i].r = UINT8_MAX;
+        pixels[i].g = UINT8_MAX;
+        pixels[i].b = UINT8_MAX;
 
-        for (int p = 0; p < NUM_PIXELS; p++) {
-            put_pixel(pio, sm, pixels[p]);
-        }
+        write_pixels(pio, sm, pixels);
 
         sleep_ms(10);
         i += 1;
 
     }
-
-    // This will free resources and unload our program
-    pio_remove_program_and_unclaim_sm(&ws2812_program, pio, sm, offset);
 }
