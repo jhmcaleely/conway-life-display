@@ -128,7 +128,7 @@ const struct {
 };
 
 int main() {
-    //set_sys_clock_48();
+    set_sys_clock_48mhz();
     stdio_init_all();
     printf("WS2812 Smoke Test, using pin %d\n", WS2812_GPIO);
 
