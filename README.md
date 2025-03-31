@@ -14,10 +14,9 @@ This LED cube is a string of WS2812 compatible LEDs, arranged as two apparently 
 
 The board wires them with three wires: Power (5V, GND) and Data ('DIN').
 
-The addressable positions in each plane, from bottom (0) to top (3) are:
+The addressable positions in each plane, from bottom (0) to top (3) follow one of two orientations (A or B). The orientations alternate as the planes stack.
 
-The planes have one of two orientations (A or B), which alternate as they stack.
-
+```
 Plane 0 (Orientation A): (bottom)
  15  14  13  12
   8   9  10  11
@@ -41,30 +40,36 @@ Plane 3 (Orientation B):
  62  57  54  49
  61  58  53  50
  60  59  52  51
+```
 
 ### Cube:Base layout
 
-               40-Pin (https://pinout.xyz)
+```
+               40-Pin
+               https://pinout.xyz
                1                   39
                2    12             40
               -----------+------------
  DC (5V, 5A) + Plane 0:               |
              |     15  14  13  12     | 0
- Jumpers     +      8   9  10  11     |  Micro:Bit
-             |      7   6   5   4     |  https://microbit.pinout.xyz
-  Micro-USB  +      0   1   2   3     | 
+ Jumpers     +      8   9  10  11     | |  Micro:Bit
+             |      7   6   5   4     | |  https://microbit.pinout.xyz
+  Micro-USB  +      0   1   2   3     | GND
              |                        |
               -+-------+----------+---
               GVS  Playground  Crumble
+```
 
-The LEDs are wired to pin 12 (GPIO 18) on the 40-bit, and Pin 0 on the Micro:Bit. In both cases the base supplies power to the attached board. 3v for the Micro:Bit, and 5V for the 40-Pin.
+The LEDs have 'DIN' (data) wired to pin 12 (GPIO 18) on the 40-bit, and Pin 0 on the Micro:Bit. In both cases the base supplies power to the attached board. 3v for the Micro:Bit, and 5V for the 40-Pin.
 
 ### Current Consumption
 
 Blogs (eg https://www.electromaker.io/blog/article/building-a-cube-with-cubebit?srsltid=AfmBOoqWBwbmUz-08ZEl8w9UU0P54sTTHbSFe7JiEvFA-ux9oO65n4U2) cite a 4tronix table of consumption that I can't directly source:
 
-4x4x4 all LEDs at Red, brightness 40 – Current 350mA
-4x4x4 all LEDs at White, brightness 40 – Current 800mA
-4x4x4 all LEDs at White, brightness 255 – Current 4.5A
+| Size | Description | Current |
+| ---- | ----------- | ------- |
+| 4x4x4 | all LEDs at Red, brightness 40 | 350mA |
+| 4x4x4 | all LEDs at White, brightness 40 | 800mA |
+| 4x4x4 | all LEDs at White, brightness 255 | 4.5A |
 
-Source code suggests keeping brightness to less than white 127 if you want to power the cube from a 2.5A USB source.
+Source code elsewhere suggests keeping brightness to less than white 127 if you want to power the cube from a 2.5A USB source.
