@@ -26,7 +26,9 @@
  *
  */
 #define IS_RGBW false
-#define NUM_PIXELS 16
+#define NUM_PIXELS 64
+// limit brightness so that 2.5A USB power supply is sufficient.
+#define PIXEL_MAX 128
 
 #ifdef PICO_DEFAULT_WS2812_PIN
 #define WS2812_PIN PICO_DEFAULT_WS2812_PIN
@@ -40,7 +42,29 @@
 #error Attempting to use a pin>=32 on a platform that does not support it
 #endif
 
+static inline void clamp_channel(uint32_t* pixel_grb,uint channelindex) {
+    uint32_t channel_mask = 0xff << channelindex;
+    uint8_t byte = (*pixel_grb & channel_mask) >> channelindex;
+    if (byte > PIXEL_MAX) {
+        byte = byte >> 1;
+        uint32_t channel = byte << channelindex;
+        *pixel_grb = *pixel_grb & ~channel_mask;
+        *pixel_grb = *pixel_grb | channel;
+
+    }
+}
+
+static inline void clamp_brightness(uint32_t* pixel_grb) {
+    clamp_channel(pixel_grb, 24);
+    clamp_channel(pixel_grb, 16);
+    clamp_channel(pixel_grb, 8);
+    clamp_channel(pixel_grb, 0);
+}
+
 static inline void put_pixel(PIO pio, uint sm, uint32_t pixel_grb) {
+
+    clamp_brightness(&pixel_grb);
+
     pio_sm_put_blocking(pio, sm, pixel_grb << 8u);
 }
 
