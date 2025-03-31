@@ -14,11 +14,11 @@
 #define NUM_PIXELS 64
 
 // limit brightness so that 2.5A USB power supply is sufficient.
-#define PIXEL_MAX (UINT8_MAX / 2)
+#define PIXEL_MAX (((UINT8_MAX + 1) / 2) - 1)
 
 static uint8_t clamp_brightness(uint8_t raw) {
     if (PIXEL_MAX < UINT8_MAX) {
-        uint8_t divider = UINT8_MAX / PIXEL_MAX;
+        uint8_t divider = (UINT8_MAX + 1) / (PIXEL_MAX + 1);
         return raw / divider;
     } else {
         return raw;
