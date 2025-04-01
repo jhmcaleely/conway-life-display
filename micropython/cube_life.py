@@ -3,11 +3,11 @@
 
 import time
 
-import life
-import cubeled
+import conway
+import cube_bit
 
 # The Life array for the CUBE:BIT Led Cube.
-cube_world = life.make_world(56)
+cube_world = conway.make_world(56)
 
 def display_cube(world):
 
@@ -16,19 +16,19 @@ def display_cube(world):
 
     for k in range(len(cube_world)):
         pixel_colour = dead
-        if cube_world[k] == life.live:
+        if cube_world[k] == conway.live:
             pixel_colour = live
     
-        cubeled.set_pixel(cubeled.led_index[k], pixel_colour)
+        cube_bit.set_pixel(cube_bit.led_index[k], pixel_colour)
     
-    cubeled.cube_display_pixels.write()
+    cube_bit.cube_display_pixels.write()
 
 
 
 while True:
 
     display_cube(cube_world)
-    cube_world = life.next_generation(cube_world, cubeled.neighbourhoods)
+    cube_world = conway.next_generation(cube_world, cube_bit.neighbourhoods)
     
     time.sleep(0.95)
     

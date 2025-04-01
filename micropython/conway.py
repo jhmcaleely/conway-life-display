@@ -12,7 +12,7 @@
 #  nnn
 
 import random
-import cubeled
+import cube_bit
 
 live = 1
 dead = 0
@@ -29,10 +29,10 @@ def make_world(size):
     return [random_state() for _ in range(size)]
 
 
-def neighbour_weight(world, neighbourhood):
+def neighbour_weight(world, cell):
     count = 0
-    for i in range(len(neighbourhood)):
-        world_offset = cubeled.led_index.index(neighbourhood[i])
+    for i in range(8):
+        world_offset = cube_bit.neighbour_of(cell, i)
         count += world[world_offset]
     
     return count
@@ -52,7 +52,7 @@ def next_state(state, alive_neighbours):
 def next_generation(world, neighbourhoods):
     next_gen = []
     for cell in range(len(world)):
-        nw = neighbour_weight(world, neighbourhoods[cell])
+        nw = neighbour_weight(world, cell)
         next_gen.append(next_state(world[cell], nw))
     
     return next_gen

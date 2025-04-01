@@ -87,6 +87,11 @@ neighbourhoods = [ [  7,  6,  1,  7,  1, 29, 28, 27 ],  # Led: 0 (corner)
                    [ 40, 47, 46, 62, 56, 62, 57, 56 ] ] # Led: 63 (corner)
 
 
+def neighbour_of(cell, neighbour):
+    led = neighbourhoods[cell][neighbour]
+    return led_index.index(led)
+
+
 def clamp_brightness(channel):
     if (max_brightness < 255):
         divider = 256 // (max_brightness + 1)
