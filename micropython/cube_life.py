@@ -27,8 +27,8 @@ def surface_neighbour_of(cell, neighbour):
     led = cube_bit.surface_neighbourhoods[cell][neighbour]
     return cube_bit.surface_leds.index(led)
 
-while True:
 
+while True:
     display_on_surface(surface_world)
     surface_world = conway.next_generation(surface_world, surface_neighbour_of)
     
