@@ -7,6 +7,8 @@
 #include "pico/stdlib.h"
 #include "ws2812.pio.h"
 
+#include "conway.h"
+
 // Match the GPIO from Raspberry Pi 40-Pin on 4Tronix Cube:BIT (GPIO18)
 #define WS2812_GPIO 18
 
@@ -67,16 +69,36 @@ int main() {
 
     ws2812_program_init(pio, sm, offset, WS2812_GPIO, 800000);
 
-    int i = 0;
+    uint8_t worldA[56];
+    uint8_t worldB[56];
+
+    uint8_t* current_world = &worldA[0];
+    uint8_t* new_world = &worldB[0];
+
+    init_world(current_world, 56);
+
     while (true) {
-        pixels[i].r = UINT8_MAX;
-        pixels[i].g = UINT8_MAX;
-        pixels[i].b = UINT8_MAX;
+
+        for (int c = 0; c < 56; c++) {
+            if (current_world[c] == 0) {
+                pixels[led_index[c]].r = UINT8_MAX;
+                pixels[led_index[c]].g = 0;
+                pixels[led_index[c]].b = 0;
+            } else {
+                pixels[led_index[c]].r = 0;
+                pixels[led_index[c]].g = UINT8_MAX;
+                pixels[led_index[c]].b = 0;
+            }
+        }
 
         write_pixels(pio, sm, pixels);
 
-        sleep_ms(10);
-        i += 1;
+        sleep_ms(950);
+        next_world(current_world, new_world, 56);
+
+        uint8_t* temp = current_world;
+        current_world = new_world;
+        new_world = temp;
 
     }
 }
