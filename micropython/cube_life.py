@@ -28,7 +28,7 @@ def display_cube(world):
 while True:
 
     display_cube(cube_world)
-    cube_world = conway.next_generation(cube_world, cube_bit.neighbourhoods)
+    cube_world = conway.next_generation(cube_world)
     
     time.sleep(0.95)
     

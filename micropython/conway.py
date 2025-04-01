@@ -49,7 +49,7 @@ def next_state(state, alive_neighbours):
     return new_state
 
 
-def next_generation(world, neighbourhoods):
+def next_generation(world):
     next_gen = []
     for cell in range(len(world)):
         nw = neighbour_weight(world, cell)
