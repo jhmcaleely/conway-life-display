@@ -7,15 +7,16 @@
 #include <stdlib.h>
 #include "cube_bit.h"
 
-static uint8_t rand_state() {
+static uint8_t random_state() {
     unsigned int half_way = (((unsigned int)RAND_MAX) + 1) / 2;
     return rand() < half_way ? 1 : 0;
 }
 
-static uint8_t neighbour_weight(uint8_t* world, uint8_t* neighbourhood) {
+static uint8_t neighbour_weight(uint8_t* world, uint8_t cell) {
     uint8_t count = 0;
     for (int i = 0; i < 8; i++) {
-        count += world[neighbourhood[i]];
+        uint8_t n = neighbour_of(cell, i);
+        count += world[n];
     }
     return count;
 }
@@ -34,13 +35,13 @@ static uint8_t next_state(uint8_t state, uint8_t alive_neighbours) {
 
 void init_world(uint8_t* world, size_t count) {
     for (int i = 0; i < count; i++) {
-        world[i] = rand_state();
+        world[i] = random_state();
     }
 }
 
-void next_world(uint8_t* current_world, uint8_t* next_world, size_t count) {
+void next_generation(uint8_t* current_world, uint8_t* next_world, size_t count) {
     for (int i = 0; i < count; i++) {
-        uint8_t nw = neighbour_weight(current_world, neighbourhoods[i]);
+        uint8_t nw = neighbour_weight(current_world, i);
         next_world[i] = next_state(current_world[i], nw);
     }
 }

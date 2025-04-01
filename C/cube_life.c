@@ -10,7 +10,7 @@
 #include "conway.h"
 #include "cube_bit.h"
 
-struct pixel pixels[NUM_PIXELS];
+
 
 
 int main() {
@@ -53,7 +53,7 @@ int main() {
         write_pixels(pio, sm, pixels);
 
         sleep_ms(950);
-        next_world(current_world, new_world, 56);
+        next_generation(current_world, new_world, 56);
 
         uint8_t* temp = current_world;
         current_world = new_world;

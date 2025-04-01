@@ -83,6 +83,17 @@ uint8_t neighbourhoods[56][8] = {
     { 40, 47, 46, 62, 56, 62, 57, 56 }, // Led: 63 (corner)
 };
 
+uint8_t neighbour_of(uint8_t cell, uint8_t neighbour) {
+    uint8_t led = neighbourhoods[cell][neighbour];
+    for (int i = 0; i < 56; i++) {
+        if (led_index[i] == led) {
+            return i;
+        }
+    }
+}
+
+struct pixel pixels[NUM_PIXELS];
+
 static uint8_t clamp_brightness(uint8_t raw) {
     if (PIXEL_MAX < UINT8_MAX) {
         uint8_t divider = (UINT8_MAX + 1) / (PIXEL_MAX + 1);
