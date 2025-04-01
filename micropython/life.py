@@ -14,9 +14,9 @@
 import random
 import cubeled
 
-# characters handing for ascii state reports
-live = '*'
-dead = '-'
+live = 1
+dead = 0
+
 
 def random_state():
     if random.randrange(2) == 0:
@@ -28,12 +28,12 @@ def random_state():
 def make_world(size):
     return [random_state() for _ in range(size)]
 
+
 def neighbour_weight(world, neighbourhood):
     count = 0
     for i in range(len(neighbourhood)):
         world_offset = cubeled.led_index.index(neighbourhood[i])
-        if world[world_offset] == live:
-            count += 1
+        count += world[world_offset]
     
     return count
 

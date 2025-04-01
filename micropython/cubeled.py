@@ -3,20 +3,11 @@
 
 import neopixel, machine
 
-cube_side = 4
+max_brightness = 127
 
 # CUBE:BIT has GRB Leds, on an 800MHz capable bus.
-cube_display_pixels = neopixel.NeoPixel(machine.Pin(18),
-                                        64,
-                                        3,
-                                        1)
+cube_display_pixels = neopixel.NeoPixel(machine.Pin(18), 64, 3, 1)
 
-# the LEDs are arranged serially, snaking around the cube.
-cube_index = [ 0, 1, 2, 3, 7, 6, 5, 4, 8, 9,10,11,15,14,13,12,
-              28,27,20,19,29,26,21,18,30,25,22,17,31,24,23,16,
-              32,33,34,35,39,38,37,36,40,41,42,43,47,46,45,44,
-              60,59,52,51,61,58,53,50,62,57,54,49,63,56,55,48
-              ]
 
 # the leds that are on the surface of the cube.
 led_index = [  0,  1,  2,  3,  4,  5,  6,  7, 
@@ -27,6 +18,7 @@ led_index = [  0,  1,  2,  3,  4,  5,  6,  7,
               40,         43, 44, 45, 46, 47,
               48, 49, 50, 51, 52, 53, 54, 55,
               56, 57, 58, 59, 60, 61, 62, 63]
+
 
 # a topological map of the neighbours for each surface led.
 neighbourhoods = [ [  7,  6,  1,  7,  1, 29, 28, 27 ],  # Led: 0 (corner)
@@ -95,7 +87,16 @@ neighbourhoods = [ [  7,  6,  1,  7,  1, 29, 28, 27 ],  # Led: 0 (corner)
                    [ 40, 47, 46, 62, 56, 62, 57, 56 ] ] # Led: 63 (corner)
 
 
+def clamp_brightness(channel):
+    if (max_brightness < 255):
+        divider = 256 // (max_brightness + 1)
+        return channel // divider
+    else:
+        return channel
+
 
 def set_pixel(k, colour):
-    global cube_display_pixels
-    cube_display_pixels[k] = colour
+    r, g, b = colour
+    clamped = (clamp_brightness(r), clamp_brightness(g), clamp_brightness(b))
+
+    cube_display_pixels[k] = clamped

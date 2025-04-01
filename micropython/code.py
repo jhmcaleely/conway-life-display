@@ -1,25 +1,18 @@
 # Conway's Life displayed on a 4tronix CUBE:BIT LED cube driven
 # by a Raspberry Pi Pico.
-#
 
 import time
-import random
 
 import life
 import cubeled
 
-
-
-def make_cube_world():
-    return life.make_world(56)
-
 # The Life array for the CUBE:BIT Led Cube.
-cube_world = make_cube_world()
+cube_world = life.make_world(56)
 
 def display_cube(world):
 
-    live = (128,0,0)
-    dead = (0,128,0)
+    live = (255,0,0)
+    dead = (0,255,0)
 
     for k in range(len(cube_world)):
         pixel_colour = dead
@@ -37,7 +30,5 @@ while True:
     display_cube(cube_world)
     cube_world = life.next_generation(cube_world, cubeled.neighbourhoods)
     
-
-
-    time.sleep(1)
+    time.sleep(0.95)
     
