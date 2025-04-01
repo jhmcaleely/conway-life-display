@@ -8,50 +8,9 @@
 #include "ws2812.pio.h"
 
 #include "conway.h"
-
-// Match the GPIO from Raspberry Pi 40-Pin on 4Tronix Cube:BIT (GPIO18)
-#define WS2812_GPIO 18
-
-// 4x4 LED cube
-#define NUM_PIXELS 64
-
-// limit brightness so that 2.5A USB power supply is sufficient.
-#define PIXEL_MAX (((UINT8_MAX + 1) / 2) - 1)
-
-static uint8_t clamp_brightness(uint8_t raw) {
-    if (PIXEL_MAX < UINT8_MAX) {
-        uint8_t divider = (UINT8_MAX + 1) / (PIXEL_MAX + 1);
-        return raw / divider;
-    } else {
-        return raw;
-    }
-}
-
-struct pixel {
-    uint8_t r;
-    uint8_t g;
-    uint8_t b;
-};
+#include "cube_bit.h"
 
 struct pixel pixels[NUM_PIXELS];
-
-static void write_pixels(PIO pio, uint sm, struct pixel* pixels) {
-    for (int i = 0; i < NUM_PIXELS; i++) {
-
-        struct pixel p;
-        p.r = clamp_brightness(pixels[i].r);
-        p.g = clamp_brightness(pixels[i].g);
-        p.b = clamp_brightness(pixels[i].b);
-        
-        // pack the pixel into the top 24 bits of a 32bit word for transport to the pio state machine.
-        uint32_t pixel = ((uint32_t) p.r) << 16 | 
-                         ((uint32_t) p.g) << 24 | 
-                         ((uint32_t) p.b) << 8;
-
-        pio_sm_put_blocking(pio, sm, pixel);
-
-    }
-}
 
 
 int main() {
