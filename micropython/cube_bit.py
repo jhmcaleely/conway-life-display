@@ -10,7 +10,7 @@ cube_display_pixels = neopixel.NeoPixel(machine.Pin(18), 64, 3, 1)
 
 
 # the leds that are on the surface of the cube.
-led_index = [  0,  1,  2,  3,  4,  5,  6,  7, 
+surface_leds = [  0,  1,  2,  3,  4,  5,  6,  7, 
                8,  9, 10, 11, 12, 13, 14, 15,
               16, 17, 18, 19, 20,         23,
               24,         27, 28, 29, 30, 31,
@@ -21,7 +21,7 @@ led_index = [  0,  1,  2,  3,  4,  5,  6,  7,
 
 
 # a topological map of the neighbours for each surface led.
-neighbourhoods = [ [  7,  6,  1,  7,  1, 29, 28, 27 ],  # Led: 0 (corner)
+surface_neighbourhoods = [ [  7,  6,  1,  7,  1, 29, 28, 27 ],  # Led: 0 (corner)
                    [  7,  6,  5,  0,  2, 28, 27, 20 ],
                    [  6,  5,  4,  1,  3, 27, 20, 19 ],
                    [  2,  5,  4,  2,  4, 20, 19, 18 ],  # Led: 3 (corner)
@@ -85,11 +85,6 @@ neighbourhoods = [ [  7,  6,  1,  7,  1, 29, 28, 27 ],  # Led: 0 (corner)
                    [ 40, 39, 32, 62, 60, 57, 58, 59 ],
                    [ 47, 40, 39, 63, 61, 56, 57, 58 ],
                    [ 40, 47, 46, 62, 56, 62, 57, 56 ] ] # Led: 63 (corner)
-
-
-def neighbour_of(cell, neighbour):
-    led = neighbourhoods[cell][neighbour]
-    return led_index.index(led)
 
 
 def clamp_brightness(channel):

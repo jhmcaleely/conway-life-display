@@ -7,28 +7,30 @@ import conway
 import cube_bit
 
 # The Life array for the CUBE:BIT Led Cube.
-cube_world = conway.make_world(56)
+surface_world = conway.make_world(56)
 
-def display_cube(world):
+def display_on_surface(world):
 
     live = (255,0,0)
     dead = (0,255,0)
 
-    for k in range(len(cube_world)):
+    for k in range(len(world)):
         pixel_colour = dead
-        if cube_world[k] == conway.live:
+        if world[k] == conway.live:
             pixel_colour = live
     
-        cube_bit.set_pixel(cube_bit.led_index[k], pixel_colour)
+        cube_bit.set_pixel(cube_bit.surface_leds[k], pixel_colour)
     
     cube_bit.cube_display_pixels.write()
 
-
+def surface_neighbour_of(cell, neighbour):
+    led = cube_bit.surface_neighbourhoods[cell][neighbour]
+    return cube_bit.surface_leds.index(led)
 
 while True:
 
-    display_cube(cube_world)
-    cube_world = conway.next_generation(cube_world)
+    display_on_surface(surface_world)
+    surface_world = conway.next_generation(surface_world, surface_neighbour_of)
     
     time.sleep(0.95)
     

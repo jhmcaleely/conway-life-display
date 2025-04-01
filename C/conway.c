@@ -3,7 +3,6 @@
  */
 
 #include "conway.h"
-#include "cube_bit.h"
 
 #include <stdlib.h>
 
@@ -18,7 +17,7 @@ void init_world(uint8_t* world, size_t count) {
     }
 }
 
-static uint8_t neighbour_weight(uint8_t* world, uint8_t cell) {
+static uint8_t neighbour_weight(uint8_t* world, uint8_t cell, fneighbour neighbour_of) {
     uint8_t count = 0;
     for (int i = 0; i < 8; i++) {
         uint8_t n = neighbour_of(cell, i);
@@ -39,9 +38,9 @@ static uint8_t next_state(uint8_t state, uint8_t alive_neighbours) {
     return new_state;
 }
 
-void next_generation(uint8_t* current_world, uint8_t* next_world, size_t count) {
+void next_generation(uint8_t* current_world, uint8_t* next_world, size_t count, fneighbour neighbour_of) {
     for (int i = 0; i < count; i++) {
-        uint8_t nw = neighbour_weight(current_world, i);
+        uint8_t nw = neighbour_weight(current_world, i, neighbour_of);
         next_world[i] = next_state(current_world[i], nw);
     }
 }

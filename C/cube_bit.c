@@ -3,8 +3,11 @@
 
 #include "cube_bit.h"
 
+// limit brightness so that 2.5A USB power supply is sufficient.
+#define PIXEL_MAX (((UINT8_MAX + 1) / 2) - 1)
+
 // the leds that are on the surface of the cube.
-uint8_t led_index[56] = 
+uint8_t surface_leds[SURFACE_LED_COUNT] = 
     {  0,  1,  2,  3,  4,  5,  6,  7, 
        8,  9, 10, 11, 12, 13, 14, 15,
       16, 17, 18, 19, 20,         23,
@@ -16,7 +19,7 @@ uint8_t led_index[56] =
     };
 
 // a topological map of the neighbours for each surface led.
-uint8_t neighbourhoods[56][8] = {
+uint8_t surface_neighbourhoods[SURFACE_LED_COUNT][8] = {
     {  7,  6,  1,  7,  1, 29, 28, 27 }, // Led: 0 (corner)
     {  7,  6,  5,  0,  2, 28, 27, 20 },
     {  6,  5,  4,  1,  3, 27, 20, 19 },
@@ -83,14 +86,6 @@ uint8_t neighbourhoods[56][8] = {
     { 40, 47, 46, 62, 56, 62, 57, 56 }, // Led: 63 (corner)
 };
 
-uint8_t neighbour_of(uint8_t cell, uint8_t neighbour) {
-    uint8_t led = neighbourhoods[cell][neighbour];
-    for (int i = 0; i < 56; i++) {
-        if (led_index[i] == led) {
-            return i;
-        }
-    }
-}
 
 struct pixel pixels[NUM_PIXELS];
 
