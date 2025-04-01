@@ -20,6 +20,7 @@ struct pixel {
 };
 
 extern struct pixel pixels[NUM_PIXELS];
+extern uint8_t led_index[56];
 
 void write_pixels(PIO pio, uint sm, struct pixel* pixels);
 uint8_t neighbour_of(uint8_t cell, uint8_t neighbour);
