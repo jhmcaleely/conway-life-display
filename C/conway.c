@@ -3,13 +3,19 @@
  */
 
 #include "conway.h"
+#include "cube_bit.h"
 
 #include <stdlib.h>
-#include "cube_bit.h"
 
 static uint8_t random_state() {
     unsigned int half_way = (((unsigned int)RAND_MAX) + 1) / 2;
     return rand() < half_way ? 1 : 0;
+}
+
+void init_world(uint8_t* world, size_t count) {
+    for (int i = 0; i < count; i++) {
+        world[i] = random_state();
+    }
 }
 
 static uint8_t neighbour_weight(uint8_t* world, uint8_t cell) {
@@ -31,12 +37,6 @@ static uint8_t next_state(uint8_t state, uint8_t alive_neighbours) {
         new_state = 1;
     }
     return new_state;
-}
-
-void init_world(uint8_t* world, size_t count) {
-    for (int i = 0; i < count; i++) {
-        world[i] = random_state();
-    }
 }
 
 void next_generation(uint8_t* current_world, uint8_t* next_world, size_t count) {
