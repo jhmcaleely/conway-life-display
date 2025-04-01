@@ -21,7 +21,7 @@ def display_on_surface(world):
     
         cube_bit.set_pixel(cube_bit.surface_leds[k], pixel_colour)
     
-    cube_bit.cube_display_pixels.write()
+    cube_bit.write_pixels()
 
 def surface_neighbour_of(cell, neighbour):
     led = cube_bit.surface_neighbourhoods[cell][neighbour]

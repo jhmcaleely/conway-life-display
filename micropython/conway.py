@@ -28,10 +28,10 @@ def make_world(size):
     return [random_state() for _ in range(size)]
 
 
-def neighbour_weight(world, cell, neighbour):
+def neighbour_weight(world, cell, neighbour_of):
     count = 0
     for i in range(8):
-        world_offset = neighbour(cell, i)
+        world_offset = neighbour_of(cell, i)
         count += world[world_offset]
     
     return count
@@ -48,10 +48,10 @@ def next_state(state, alive_neighbours):
     return new_state
 
 
-def next_generation(world, neighbour):
+def next_generation(world, neighbour_of):
     next_gen = []
     for cell in range(len(world)):
-        nw = neighbour_weight(world, cell, neighbour)
+        nw = neighbour_weight(world, cell, neighbour_of)
         next_gen.append(next_state(world[cell], nw))
     
     return next_gen

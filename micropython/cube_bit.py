@@ -100,3 +100,7 @@ def set_pixel(k, colour):
     clamped = (clamp_brightness(r), clamp_brightness(g), clamp_brightness(b))
 
     cube_display_pixels[k] = clamped
+    
+
+def write_pixels():
+    cube_display_pixels.write()
