@@ -1,7 +1,7 @@
 # Python implementation of Conway's Life
 # https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
 
-# A 2D matrix of cells, which contain a running instance
+# A matrix of cells, which contain a running instance
 # of Conway's Life.
 #
 # The neighbourhood (n) around a cell (c) is consulted to
@@ -12,6 +12,7 @@
 #  nnn
 
 import random
+import cubeled
 
 # characters handing for ascii state reports
 live = '*'
@@ -23,28 +24,22 @@ def random_state():
     else:
         return live
 
-def make_row(cols):
-    return [random_state() for _ in range(cols)]
 
-def make_world(cols, lines):
-    return [make_row(cols) for _ in range(lines)]
+def make_world(size):
+    return [random_state() for _ in range(size)]
 
-def row_count(world):
-    return len(world)
-
-def col_count(world):
-    return len(world[0])
-
-def get_cell(world, x, y):
-    return world[y][x]
-
-def set_cell(world, x, y, state):
-    world[y][x] = state
+def neighbour_weight(world, neighbourhood):
+    count = 0
+    for i in range(len(neighbourhood)):
+        world_offset = cubeled.led_index.index(neighbourhood[i])
+        if world[world_offset] == live:
+            count += 1
+    
+    return count
 
 
-def next_state(state, neighbourhood):
+def next_state(state, alive_neighbours):
     new_state = dead
-    alive_neighbours = neighbourhood.count(live)
     
     if state == live and (alive_neighbours == 2 or alive_neighbours == 3):
         new_state = live
@@ -54,42 +49,10 @@ def next_state(state, neighbourhood):
     return new_state
 
 
-def next_generation(world):
+def next_generation(world, neighbourhoods):
     next_gen = []
-    for line in range(row_count(world)):
-        new_line = []
-        for col in range(col_count(world)):
-            neighbourhood = neighbours(world, line, col)
-            state = get_cell(world, col, line)
-            new_line.append(next_state(state, neighbourhood))
-
-#            print(f'\
-#({line}.{col}):{state}::{new_line[col]}:\
-#({neighbourhood.count(live)},{neighbourhood})'
-#                  )
-        next_gen.append(new_line)
-
-    return next_gen
-
-
-def adjacent_line(world, line, col):
-    return [line[(col + x) % col_count(world)] for x in range(-1, 2)]
-
-
-def neighbours(world, line, col):
-    n = []
-    col_c = col_count(world)
-    row_c = row_count(world)
+    for cell in range(len(world)):
+        nw = neighbour_weight(world, neighbourhoods[cell])
+        next_gen.append(next_state(world[cell], nw))
     
-    n.extend(adjacent_line(world, world[(line - 1) % row_c], col))
-
-    n.append(get_cell(world, (col-1) % col_c, line))
-    n.append(get_cell(world, (col+1) % col_c, line))
-
-    n.extend(adjacent_line(world, world[(line + 1) % row_c], col))
-    return n
-
-
-def print_world(world):
-    for line in range(len(world)):
-        print(f'{line}: {world[line]}')
+    return next_gen
