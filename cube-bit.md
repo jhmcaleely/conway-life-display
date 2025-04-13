@@ -1,6 +1,6 @@
 # Cube:Bit
 
-Some notes summarised from docs elsewhere, and reverse enginering the [4tronix LED Cube](https://shop.4tronix.co.uk/products/cubebit), hosted on a Raspberry Pi Pico.
+Some notes summarised from docs elsewhere, and reverse enginering the [4tronix LED Cube](https://shop.4tronix.co.uk/products/cubebit).
 
 Implemented in C and Micropython. Either implementation can be run as firmware on the Pico.
 
