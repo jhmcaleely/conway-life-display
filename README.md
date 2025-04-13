@@ -1,6 +1,8 @@
-# cube-bit
+# conway-life-display
 
-Some reverse engineered notes of the [4tronix LED Cube](https://shop.4tronix.co.uk/products/cubebit), hosted on a Raspberry Pi Pico.
+Conway's Life implemented on a LED cube, hosted on a Raspberry Pi Pico.
+
+Some [reverse engineered notes](cube-bit.md) of the [4tronix LED Cube](https://shop.4tronix.co.uk/products/cubebit).
 
 Implemented in C and Micropython. Either implementation can be run as firmware on the Pico.
 
