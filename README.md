@@ -11,3 +11,7 @@ Implemented in C and Micropython. Either implementation can be run as firmware o
 `cube-bit/`
 
 contains a kicad project that connects a pico to the 40-pin Pi connector.
+
+`Plinth/`
+
+contains a lightburn project to create a plinth for the Cube:Bit + Pico to sit on. Originally drawn using [Boxes.py](https://boxes.hackerspace-bamberg.de/?language=en). 
