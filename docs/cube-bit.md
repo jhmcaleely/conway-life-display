@@ -1,16 +1,12 @@
-# Cube:Bit
-
-Some notes summarised from docs elsewhere, and reverse enginering the [4tronix LED Cube](https://shop.4tronix.co.uk/products/cubebit).
-
-Implemented in C and Micropython. Either implementation can be run as firmware on the Pico.
-
-## 4tronix CUBE:BIT
+# 4tronix CUBE:BIT
 
 The CUBE:BIT: https://shop.4tronix.co.uk/products/cubebit
 
-This LED cube is a string of WS2812 compatible LEDs, arranged as two apparently parallel strings. A 4x4 cube has 128 LEDs, at 64 addressable positions.
+This is a flexible LED cube design, intended to be driven by a 40-pin Raspberry Pi (A Pi Zero can be directly mounted) or a Micro:Bit.
 
-The board wires them with three wires: Power (5V, GND) and Data ('DIN').
+The LED cube is a string of WS2812 compatible LEDs, arranged as two apparently parallel strings. A 4x4 cube has 128 LEDs, at 64 addressable positions.
+
+The board connects them with three wires: Power (5V, GND) and Data ('DIN').
 
 The addressable positions in each plane, from bottom (0) to top (3) follow one of two orientations (A or B). The orientations alternate as the planes stack.
 
@@ -40,7 +36,7 @@ Plane 3 (Orientation B):
  60  59  52  51
 ```
 
-### Cube:Base layout
+## Cube:Base layout
 
 ```
                40-Pin
@@ -58,11 +54,11 @@ Plane 3 (Orientation B):
               GVS  Playground  Crumble
 ```
 
-The LEDs have 'DIN' (data) wired to pin 12 (GPIO 18) on the 40-bit, and Pin 0 on the Micro:Bit. In both cases the base supplies power to the attached board. 3v for the Micro:Bit, and 5V for the 40-Pin.
+The LEDs have 'DIN' (data) wired to pin 12 (GPIO 18) on the 40-bit, and Pin 0 on the Micro:Bit. In both cases the base supplies power to the attached board (3v for the Micro:Bit, and 5v for the 40-Pin attached Pi).
 
-### Current Consumption
+## Current Consumption
 
-Blogs (eg https://www.electromaker.io/blog/article/building-a-cube-with-cubebit?srsltid=AfmBOoqWBwbmUz-08ZEl8w9UU0P54sTTHbSFe7JiEvFA-ux9oO65n4U2) cite a 4tronix table of consumption that I can't directly source:
+Several blogs (eg [ElectroMaker](https://www.electromaker.io/blog/article/building-a-cube-with-cubebit?srsltid=AfmBOoqWBwbmUz-08ZEl8w9UU0P54sTTHbSFe7JiEvFA-ux9oO65n4U2) ) cite a 4tronix table of consumption that I can't directly source:
 
 | Size | Description | Current |
 | ---- | ----------- | ------- |
@@ -70,4 +66,4 @@ Blogs (eg https://www.electromaker.io/blog/article/building-a-cube-with-cubebit?
 | 4x4x4 | all LEDs at White, brightness 40 | 800mA |
 | 4x4x4 | all LEDs at White, brightness 255 | 4.5A |
 
-Source code elsewhere suggests keeping brightness to less than white 127 if you want to power the cube from a 2.5A USB source.
+These are broadly matched by my own measurements on the board I have. If you use a 2.5A USB source, you can limit the maximum brightness to 127 (50%), and not draw too much current. My own board draws around 2.1A when showing white at 50% brightness.
