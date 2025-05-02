@@ -56,6 +56,8 @@ Plane 3 (Orientation B):
 
 The LEDs have 'DIN' (data) wired to pin 12 (GPIO 18) on the 40-bit, and Pin 0 on the Micro:Bit. In both cases the base supplies power to the attached board (3v for the Micro:Bit, and 5v for the 40-Pin attached Pi).
 
+Power can be supplied by a micro-usb supply (eg, a [2.5A Raspberry Pi supply](https://www.raspberrypi.com/products/micro-usb-power-supply/)), the 'Crumble' pads, the headers labelled GVS or the DC barrel jack. The DC barrel socket is suitable for a standard 2.1mm centre positive barrel jack. The Jumpers select which source the board uses for power. Any suspply less than 5A in capacity will require the software to limit the led brightness to less than the maximum.
+
 ## Current Consumption
 
 Several blogs (eg [ElectroMaker](https://www.electromaker.io/blog/article/building-a-cube-with-cubebit?srsltid=AfmBOoqWBwbmUz-08ZEl8w9UU0P54sTTHbSFe7JiEvFA-ux9oO65n4U2) ) cite a 4tronix table of consumption that I can't directly source:
